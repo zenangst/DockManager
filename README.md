@@ -2,7 +2,7 @@
 
 ## Description
 
-Show and hide the Dock based on if there are any overlapping windows.
+Mimic the show/hide behavior of Stage Manager based on open windows, but for the Dock.
 
 ## Author
 
