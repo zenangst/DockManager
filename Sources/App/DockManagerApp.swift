@@ -1,6 +1,5 @@
 import SwiftUI
 
-
 @main
 struct DockManagerApp: App {
   var body: some Scene {
