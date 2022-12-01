@@ -1,10 +1,17 @@
 import Cocoa
 
 enum Dock {
-  enum Position {
+  enum Position: String {
     case left
     case right
     case bottom
+
+    static func get() -> Position {
+      guard let dockDefaults = UserDefaults(suiteName: "com.apple.dock") else {
+        return .bottom
+      }
+      return Dock.Position(rawValue: dockDefaults.string(forKey: "orientation") ?? "bottom") ?? .bottom
+    }
   }
 
   case unknown, shown, hidden
