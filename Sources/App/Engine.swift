@@ -26,17 +26,28 @@ final class Engine {
         self?.run()
       }.store(in: &subscriptions)
 
+    NotificationCenter.default
+      .publisher(for: NSWorkspace.activeSpaceDidChangeNotification, object: nil)
+      .sink { [weak self] _ in
+        self?.runTwice()
+      }.store(in: &subscriptions)
+
     NSWorkspace.shared.publisher(for: \.frontmostApplication)
       .dropFirst()
       .sink { [weak self] _ in
-        self?.run()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.375) {
-          self?.run()
-        }
+        self?.runTwice()
       }.store(in: &subscriptions)
+
 
     _ = Dock.hasPrivileges()
     dockState = Dock.get()
+  }
+
+  private func runTwice() {
+    run()
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.375) { [weak self] in
+      self?.run()
+    }
   }
 
   private func handle(_ event: NSEvent) {
@@ -77,7 +88,7 @@ final class Engine {
     }
 
     let predicate: (WindowModel) -> Bool
-    let margin: CGFloat = 16
+    let margin: CGFloat = 12
 
     switch Dock.Position.get() {
     case .bottom:
